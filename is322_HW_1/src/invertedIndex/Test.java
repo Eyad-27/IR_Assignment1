@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package invertedIndex;
 
 import java.io.BufferedReader;
@@ -19,7 +15,7 @@ public class Test {
         Index5 index = new Index5();
         //|**  change it to your collection directory 
         //|**  in windows "C:\\tmp11\\rl\\collection\\"       
-        String files = "/home/ehab/tmp11/rl/collection/";
+        String files = "D:\\3nd_Year_2nd_sem\\IR\\Pulls\\IR_Assignment1\\tmp11\\rl\\collection\\";
 
         File file = new File(files);
         //|** String[] 	list()
@@ -46,6 +42,10 @@ public class Test {
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             phrase = in.readLine();
 /// -3- **** complete here ****
+            if (!phrase.isEmpty()) {
+                System.out.println(index.find_24_01(phrase));
+            }
+
         } while (!phrase.isEmpty());
 
     }
