@@ -19,7 +19,7 @@ public class Test {
         Index5 index = new Index5();
         //|**  change it to your collection directory 
         //|**  in windows "C:\\tmp11\\rl\\collection\\"       
-        String files = "/home/ehab/tmp11/rl/collection/";
+        String files = "D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl/collection/";
 
         File file = new File(files);
         //|** String[] 	list()
@@ -39,14 +39,27 @@ public class Test {
         String test3 = "data  should plain greatest comif"; // data  should plain greatest comif
         System.out.println("Boo0lean Model result = \n" + index.find_24_01(test3));
 
-        String phrase = "";
+    String phrase = "";
 
         do {
             System.out.println("Print search phrase: ");
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             phrase = in.readLine();
-/// -3- **** complete here ****
-        } while (!phrase.isEmpty());
 
+            // Check if the user actually typed something
+            if (!phrase.isEmpty()) {
+                // Call the search function and print the result
+                String result = index.find_24_01(phrase); 
+                
+                if (result.isEmpty()) {
+                    System.out.println("No documents found for: " + phrase);
+                } else {
+                    System.out.println("Boolean Model result = \n" + result);
+                }
+            }
+            
+        } while (!phrase.isEmpty()); // Loop continues until you press Enter on an empty line
+    
+    
     }
 }

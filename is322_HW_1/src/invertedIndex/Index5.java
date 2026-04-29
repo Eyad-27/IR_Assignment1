@@ -149,11 +149,11 @@ public class Index5 {
 //----------------------------------------------------------------------------  
 
     String stemWord(String word) { //skip for now
-        return word;
-//        Stemmer s = new Stemmer();
-//        s.addString(word);
-//        s.stem();
-//        return s.toString();
+        
+       Stemmer s = new Stemmer();
+       s.addString(word);
+       s.stem();
+       return s.toString();
     }
 
     //----------------------------------------------------------------------------  
@@ -200,20 +200,32 @@ public class Index5 {
         return answer;
     }
 
-    public String find_24_01(String phrase) { // any mumber of terms non-optimized search 
+ public String find_24_01(String phrase) { 
         String result = "";
         String[] words = phrase.split("\\W+");
         int len = words.length;
         
-        //fix this if word is not in the hash table will crash...
-        Posting posting = index.get(words[0].toLowerCase()).pList;
+        // 1. Check if the first word exists in the index
+        DictEntry firstTerm = index.get(words[0].toLowerCase());
+        if (firstTerm == null) {
+            return "Word '" + words[0] + "' not found in index.";
+        }
+        
+        Posting posting = firstTerm.pList;
         int i = 1;
         while (i < len) {
-            posting = intersect(posting, index.get(words[i].toLowerCase()).pList);
+            // 2. Check if subsequent words exist before trying to intersect
+            DictEntry nextTerm = index.get(words[i].toLowerCase());
+            if (nextTerm == null) {
+                return "Word '" + words[i] + "' not found in index.";
+            }
+            
+            posting = intersect(posting, nextTerm.pList);
             i++;
         }
+        
+        // 3. Format the results
         while (posting != null) {
-            //System.out.println("\t" + sources.get(num));
             result += "\t" + posting.docId + " - " + sources.get(posting.docId).title + " - " + sources.get(posting.docId).length + "\n";
             posting = posting.next;
         }
@@ -245,7 +257,7 @@ public class Index5 {
 
     public void store(String storageName) {
         try {
-            String pathToStorage = "/home/ehab/tmp11/rl/"+storageName;
+            String pathToStorage ="D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName;
             Writer wr = new FileWriter(pathToStorage);
             for (Map.Entry<Integer, SourceRecord> entry : sources.entrySet()) {
                 System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue().URL + ", Value = " + entry.getValue().title + ", Value = " + entry.getValue().text);
@@ -282,7 +294,7 @@ public class Index5 {
     }
 //=========================================    
     public boolean storageFileExists(String storageName){
-        java.io.File f = new java.io.File("/home/ehab/tmp11/rl/"+storageName);
+        java.io.File f = new java.io.File("D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName);
         if (f.exists() && !f.isDirectory())
             return true;
         return false;
@@ -291,7 +303,7 @@ public class Index5 {
 //----------------------------------------------------    
     public void createStore(String storageName) {
         try {
-            String pathToStorage = "/home/ehab/tmp11/"+storageName;
+            String pathToStorage = "D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName;
             Writer wr = new FileWriter(pathToStorage);
             wr.write("end" + "\n");
             wr.close();
@@ -304,7 +316,7 @@ public class Index5 {
      //load index from hard disk into memory
     public HashMap<String, DictEntry> load(String storageName) {
         try {
-            String pathToStorage = "/home/ehab/tmp11/rl/"+storageName;         
+            String pathToStorage = "D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName;         
             sources = new HashMap<Integer, SourceRecord>();
             index = new HashMap<String, DictEntry>();
             BufferedReader file = new BufferedReader(new FileReader(pathToStorage));
