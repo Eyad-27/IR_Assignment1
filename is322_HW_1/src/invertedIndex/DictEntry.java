@@ -18,44 +18,45 @@ public class DictEntry {
     Posting last = null;
 //------------------------------------------------
 
-    boolean postingListContains(int i) {
-        boolean found = false;
+public boolean postingListContains(int i) {
+        return getPostingNode(i) != null;
+    }
+//------------------------------------------------
+
+public int getPosting(int i) {
+        Posting p = getPostingNode(i);
+        return (p != null) ? p.dtf : 0;
+    }
+//------------------------------------------------
+
+public Posting getPostingNode(int i) {
         Posting p = pList;
         while (p != null) {
             if (p.docId == i) {
-                return true;
+                return p;
+            }
+            if (p.docId > i) {
+                break; // Optimization: postings are sorted by docId
             }
             p = p.next;
         }
-        return found;
-    }
+        return null;
+    }    
 //------------------------------------------------
-
-    int getPosting(int i) {
-        int found = 0;
-        Posting p = pList;
-        while (p != null) {
-            if (p.docId >= i) {
-                if (p.docId == i) {
-                    return p.dtf;
-                } else {
-                    return 0;
-                }
-            }
-            p = p.next;
-        }
-        return found;
-    }
-//------------------------------------------------
-
-    void addPosting(int i) {
-        // pList = new Posting(i);
+public void addPosting(int i, int pos) {
         if (pList == null) {
-            pList = new Posting(i);
+            pList = new Posting(i, pos);
             last = pList;
         } else {
-            last.next = new Posting(i);
-            last = last.next;
+            // Check if we are still processing the same document
+            if (last.docId == i) {
+                last.positions.add(pos);
+                last.dtf++;
+            } else {
+                // New document, create a new posting node
+                last.next = new Posting(i, pos);
+                last = last.next;
+            }
         }
     }
 // implement insert (int docId) method
