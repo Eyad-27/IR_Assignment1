@@ -19,8 +19,9 @@ import java.util.Map;
 import java.io.PrintWriter;
 
 /**
- *
- * @author ehab
+ * The core class responsible for building, storing, loading, and querying 
+ * an Inverted Index for Information Retrieval.
+ * * @author ehab
  */
 public class Index5 {
 
@@ -31,17 +32,30 @@ public class Index5 {
     public HashMap<String, DictEntry> index; // THe inverted index
     //--------------------------------------------
 
+    /**
+     * Constructor for the Index5 class.
+     * Initializes the sources map and the inverted index dictionary.
+     */
     public Index5() {
         sources = new HashMap<Integer, SourceRecord>();
         index = new HashMap<String, DictEntry>();
     }
 
+    /**
+     * Sets the total number of documents in the collection.
+     * @param n The number of documents.
+     */
     public void setN(int n) {
         N = n;
     }
 
 
     //---------------------------------------------
+    /**
+     * Prints the posting list for a dictionary term.
+     * Displays a bracketed list of document IDs.
+     * @param p The head of the Posting list to print.
+     */
     public void printPostingList(Posting p) {
         // Iterator<Integer> it2 = hset.iterator();
         System.out.print("[");
@@ -58,6 +72,10 @@ public class Index5 {
     }
 
     //---------------------------------------------
+    /**
+     * Prints the entire inverted index dictionary to the console.
+     * Displays the term, document frequency, and its associated posting list.
+     */
     public void printDictionary() {
         Iterator it = index.entrySet().iterator();
         while (it.hasNext()) {
@@ -71,6 +89,10 @@ public class Index5 {
     }
  
     //-----------------------------------------------
+    /**
+     * Builds the inverted index by reading and parsing a list of text files.
+     * @param files An array of file paths to process.
+     */
     public void buildIndex(String[] files) {  // from disk not from the internet
         int fid = 0;
         for (String fileName : files) {
@@ -96,6 +118,13 @@ public class Index5 {
     }
 
     //----------------------------------------------------------------------------  
+    /**
+     * Processes a single line of text by tokenizing, filtering stop words,
+     * stemming, and updating the inverted index mapping.
+     * @param ln The string line of text to process.
+     * @param fid The document ID of the file the line belongs to.
+     * @return The number of words processed in the line.
+     */
     public int indexOneLine(String ln, int fid) {
         int flen = 0;
 
@@ -138,6 +167,11 @@ public class Index5 {
     }
 
 //----------------------------------------------------------------------------  
+    /**
+     * Checks if a given word is a stop word or too short to be indexed.
+     * @param word The string word to check.
+     * @return True if the word is a stop word, false otherwise.
+     */
     boolean stopWord(String word) {
         if (word.equals("the") || word.equals("to") || word.equals("be") || word.equals("for") || word.equals("from") || word.equals("in")
                 || word.equals("a") || word.equals("into") || word.equals("by") || word.equals("or") || word.equals("and") || word.equals("that")) {
@@ -151,6 +185,11 @@ public class Index5 {
     }
 //----------------------------------------------------------------------------  
 
+    /**
+     * Reduces a given word to its stem root using the Stemmer class.
+     * @param word The word to stem.
+     * @return The stemmed version of the word.
+     */
     String stemWord(String word) { //skip for now
         
        Stemmer s = new Stemmer();
@@ -160,6 +199,12 @@ public class Index5 {
     }
 
     //----------------------------------------------------------------------------  
+    /**
+     * Intersects two posting lists to find common document IDs using a boolean AND logic.
+     * @param pL1 The first posting list.
+     * @param pL2 The second posting list.
+     * @return A new Posting list containing document IDs present in both lists.
+     */
     Posting intersect(Posting pL1, Posting pL2) {
 ///****  -1-   complete after each comment ****
 //   INTERSECT ( p1 , p2 )
@@ -203,7 +248,13 @@ public class Index5 {
         return answer;
     }
 
- public String find_24_01(String phrase) { 
+    /**
+     * Processes a multi-word phrase query by intersecting the posting lists 
+     * of each term to find documents that contain all terms.
+     * @param phrase The multi-word query string.
+     * @return A formatted string detailing the matched documents.
+     */
+    public String find_24_01(String phrase) { 
         String result = "";
         String[] words = phrase.split("\\W+");
         int len = words.length;
@@ -237,6 +288,11 @@ public class Index5 {
     
     
     //---------------------------------
+    /**
+     * Sorts an array of string words alphabetically using bubble sort.
+     * @param words The array of strings to sort.
+     * @return The alphabetically sorted array.
+     */
     String[] sort(String[] words) {  //bubble sort
         boolean sorted = false;
         String sTmp;
@@ -258,6 +314,10 @@ public class Index5 {
 
      //---------------------------------
 
+    /**
+     * Serializes and stores the indexed sources and inverted index to the disk.
+     * @param storageName The filename suffix used for storage.
+     */
     public void store(String storageName) {
         try {
             String pathToStorage ="D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName;
@@ -296,6 +356,11 @@ public class Index5 {
         }
     }
 //=========================================    
+    /**
+     * Checks if the inverted index storage file already exists on the disk.
+     * @param storageName The filename suffix to check.
+     * @return True if the file exists, false otherwise.
+     */
     public boolean storageFileExists(String storageName){
         java.io.File f = new java.io.File("D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName);
         if (f.exists() && !f.isDirectory())
@@ -304,6 +369,10 @@ public class Index5 {
             
     }
 //----------------------------------------------------    
+    /**
+     * Creates an empty storage file on the disk for the inverted index.
+     * @param storageName The filename suffix to create.
+     */
     public void createStore(String storageName) {
         try {
             String pathToStorage = "D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName;
@@ -316,7 +385,11 @@ public class Index5 {
         }
     }
 //----------------------------------------------------      
-     //load index from hard disk into memory
+    /**
+     * Loads and deserializes the sources and inverted index from the disk into memory.
+     * @param storageName The filename suffix to load from.
+     * @return The populated inverted index HashMap.
+     */
     public HashMap<String, DictEntry> load(String storageName) {
         try {
             String pathToStorage = "D:/3rd_Year_2nd-Term/IR/test/IR_Assignment1/tmp11/rl"+storageName;         
