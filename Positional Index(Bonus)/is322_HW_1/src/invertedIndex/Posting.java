@@ -2,40 +2,62 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
+ 
 package invertedIndex;
 
 import java.util.ArrayList;
 
 /**
- * Represents a node in the posting list.
- * Stores the document ID, term frequency, and exact word positions (Bonus Requirement).
- * 
- * @author ehab
+ * Posting class - Represents a single posting in the posting list
+ * Contains document ID, document term frequency, and positions of the term in the document
  */
 public class Posting {
 
+    /**
+     * next - Pointer to the next posting in the linked list
+     */
     public Posting next = null;
-    public int docId;
-    public int dtf = 1;
-    public ArrayList<Integer> positions; // BONUS: Stores exact positions of the word in the document
+    
+    /**
+     * docId - Document identifier
+     */
+    int docId;
+    
+    /**
+     * dtf - Document term frequency (how many times the term appears in this document)
+     */
+    int dtf = 1;
 
     /**
-     * Constructor for a new Posting with a document ID.
-     * @param id The document ID.
+     * positions - List to store all positions where the term appears in the document
+     * positional index - Enables phrase and proximity searches
      */
-    public Posting(int id) {
+    ArrayList<Integer> positions = new ArrayList<>();
+
+    /**
+     * Constructor with document ID and document term frequency
+     * @param id the document ID
+     * @param t the document term frequency
+     */
+    Posting(int id, int t) {
         docId = id;
-        positions = new ArrayList<Integer>();
+        dtf = t;
+    }
+    
+    /**
+     * Constructor with only document ID (dtf defaults to 1)
+     * @param id the document ID
+     */
+    Posting(int id) {
+        docId = id;
     }
 
     /**
-     * Constructor for a new Posting with document ID and document term frequency.
-     * @param id The document ID.
-     * @param t The term frequency.
+     * Add a position where the term appears in the document
+     * @param pos the position/index in the document
      */
-    public Posting(int id, int t) {
-        docId = id;
-        dtf = t;
-        positions = new ArrayList<Integer>();
+    void addPosition(int pos) {
+        positions.add(pos);
     }
 }
